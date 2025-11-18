@@ -1,5 +1,10 @@
 {% extends 'navbar/navbar.html' %}
 {% block conteudo %}
+  {% if current_user %}
+    <li class="nav-item">
+        <a class="nav-link" href="#">Perfil de {{current_user}}</a>
+    </li>
+  {% else %}
    <div class="container">
             <h2 class="mt-5">Registrar</h2>
             <form action="{{ url_for('register') }}" method="POST">
@@ -23,4 +28,5 @@
             </form>
             <p class="mt-3">Deseja logar? <a href="/login">Faça login</a></p>
         </div>
+    {% endif %}
 {% endblock conteudo %}

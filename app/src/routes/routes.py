@@ -13,6 +13,10 @@ def home(current_user):
             return render_template('navbar/navbar.html', user=current_user.username, users_USER=users.has_permission('USER'))
         elif users.has_permission('ADMIN'):
             return render_template('navbar/navbar.html', user=current_user.username, users_ADMIN=users.has_permission('ADMIN'))
+        else :
+            return render_template('navbar/navbar.html', user=current_user.username)
+        
+      
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
