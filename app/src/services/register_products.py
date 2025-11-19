@@ -1,18 +1,17 @@
 from app.src.model.produtcs import Products
-from flask import request, jsonify
+from flask import request, redirect, url_for, jsonify, render_template
 from app import db
 
 class ServicesProducts:
     @staticmethod
     def register_product():
         
-        data = request.get_json()
         
-        Cod_fabricante = data['Cod_fabricante']
-        Ean = data['Ean']
-        Description_product = data['Description_product']
-        cod_system = data['cod_system']
-        Description_code_system = data['Description_code_system']
+        Cod_fabricante = request.form['Cod_fabricante']
+        Ean = request.form['Ean']
+        Description_product = request.form['Description_product']
+        cod_system = request.form['cod_system']
+        Description_code_system = request.form['Description_code_system']
 
         products = Products(Cod_fabricante, Ean, Description_product, cod_system, Description_code_system)
 
@@ -20,15 +19,20 @@ class ServicesProducts:
         try:
             db.session.add(products)
             db.session.commit()
-            return jsonify({"Cod_Fabricanmte": Cod_fabricante}), 200
+            response = redirect(url_for('product_register'))
+            return response
         except:
             return jsonify({"Error": "Request not found"}), 400
         
     @staticmethod
     def list_products():
-        products = Products.query.all()
-        data = [prod.to_dict() for prod in products]
-        return jsonify(data), 200
+        page = request.args.get('page', 1, type=int)
+        per_page = 13
+        products = Products.query.paginate(page=page, per_page=per_page)
+        return render_template (
+            "lista_produtos.html",
+            produtos=products
+        )
     
     @staticmethod
     def update_products(id):

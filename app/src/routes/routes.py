@@ -34,13 +34,17 @@ def register():
         return ServicesRegister.register_user()
     return render_template('register.html')
 
-@app.route('/product_register', methods=['POST'])
+@app.route('/product_register', methods=['GET', 'POST'])
 def product_register():
-     return ServicesProducts.register_product()
+     if request.method == 'POST':
+        return ServicesProducts.register_product()
+     return render_template('register_products.html')
  
 @app.route('/list_products', methods=['GET'])
 def list_products():
-    return ServicesProducts.list_products()
+    if request.method == 'GET':
+        return ServicesProducts.list_products()
+    return render_template('lista_produtos.html')
 
 @app.route('/product_register/<id>', methods=['PUT'])
 def post_product(id):

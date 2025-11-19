@@ -1,0 +1,47 @@
+{% extends 'navbar/navbar.html' %}
+{% block conteudo %}
+  {% if current_user %}
+    <br>
+    <br>
+        <table class="table table-bordered table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Código Fabricante</th>
+                    <th>Ean</th>
+                    <th>Descrição do Produto</th>
+                    <th>Código no sistema</th>
+                    <th>Descrição do código no Sistema</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.id }}</td>
+                    <td>{{ produto.Cod_fabricante }}</td>
+                    <td>{{ produto.Ean }}</td>
+                    <td>{{ produto.Description_product }}</td>
+                    <td>{{ produto.cod_system }}</td>
+                    <td>{{ produto.Description_code_system }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if produtos.has_prev %}
+            <a href="{{ url_for('list_products', page=produtos.prev_num) }}" 
+            class="btn btn-secondary btn-xs">
+            Página Anterior
+            </a>
+        {% endif %}
+
+        {% if produtos.has_next %}
+            <a href="{{ url_for('list_products', page=produtos.next_num) }}" 
+            class="btn btn-secondary btn-xs">
+            Próxima Página
+            </a>
+        {% endif %}
+
+    {% else %}
+
+{% endif %}
+{% endblock conteudo %}

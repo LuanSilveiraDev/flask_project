@@ -1,9 +1,7 @@
 {% extends 'navbar/navbar.html' %}
 {% block conteudo %}
   {% if current_user %}
-    <li class="nav-item">
-        <a class="nav-link" href="#">Perfil de {{current_user}}</a>
-    </li>
+ 
   {% else %}
         <div class="container">
             <h2 class="mt-5">Login</h2>

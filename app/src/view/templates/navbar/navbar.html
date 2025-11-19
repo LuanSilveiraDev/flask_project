@@ -21,6 +21,12 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Perfil de {{current_user}}</a>
       </li>
+       <li class="nav-item">
+        <a class='nav-link' href="{{ url_for('product_register') }}">Cadastrar Produtos</a>
+      </li>
+       <li class="nav-item">
+        <a class='nav-link' href="{{ url_for('list_products') }}">Listar Produtos</a>
+      </li>
       <li class="nav-item">
         <a class='nav-link' href="{{ url_for('logout') }}">Sair</a>
       </li>
@@ -36,11 +42,7 @@
   </div>
 </nav>
       <div class="container">
-          {% if users_USER %}
-          <h2>Bem vindo {{user}}</h2>
-          {% elif users_ADMIN %}
-          <h2>Bem vindo {{user}} admin</h2>
-          {% endif %}
+
           {% block conteudo %}
 
           {% endblock conteudo %}

@@ -28,12 +28,10 @@ class ServicesLogin:
         token = request.cookies.get('token')
         if not token:
             return {'current_user': None}
-
-        try:
+        else:
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
             return {'current_user': data['username']}
-        except:
-            return {'current_user': None}
+    
 
 
     @staticmethod
