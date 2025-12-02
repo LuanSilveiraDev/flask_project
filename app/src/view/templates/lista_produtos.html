@@ -1,28 +1,46 @@
 {% extends 'navbar/navbar.html' %}
 {% block conteudo %}
   {% if current_user %}
+  <br>
+  <br>
+   <form method="GET" action="{{ url_for('search_products') }}" class="mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" name="q" placeholder="Buscar produto...">
+            <button class="btn btn-primary" type="submit">
+                Buscar
+            </button>
+        </div>
+    </form>
+
+
+
+
     <br>
     <br>
         <table class="table table-bordered table-hover">
             <thead class="table-dark">
                 <tr>
-                    <th>Id</th>
                     <th>Código Fabricante</th>
                     <th>Ean</th>
                     <th>Descrição do Produto</th>
                     <th>Código no sistema</th>
                     <th>Descrição do código no Sistema</th>
+                    <th>Deletar Produto</th>
                 </tr>
             </thead>
             <tbody>
                 {% for produto in produtos %}
                 <tr>
-                    <td>{{ produto.id }}</td>
                     <td>{{ produto.Cod_fabricante }}</td>
                     <td>{{ produto.Ean }}</td>
                     <td>{{ produto.Description_product }}</td>
                     <td>{{ produto.cod_system }}</td>
                     <td>{{ produto.Description_code_system }}</td>
+                    <td>
+                        <a href="{{produto.id}}/delete_product" class="btn btn-danger btn-xs">Excluir</a>
+                        <a href="{{ url_for('update_product', id=produto.id) }}" class="btn btn-secondary btn-xs">Editar</a>
+
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

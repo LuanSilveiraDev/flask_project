@@ -46,7 +46,7 @@ class ServicesLogin:
         def decorated(*args, **kwargs):
             token = request.cookies.get('token')
             if not token:
-                return jsonify({'message': 'token is missing', 'data': {}}), 401
+                return render_template('navbar/navbar.html')
             try:
                 data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
                 current_user = user_by_username(username=data['username'])
@@ -54,5 +54,5 @@ class ServicesLogin:
                 return jsonify({'message': 'token is invalid or expired', 'data': {}}), 401
             return f(current_user, *args, **kwargs)
         return decorated
-
+    
 

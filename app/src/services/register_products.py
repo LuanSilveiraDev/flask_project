@@ -1,11 +1,12 @@
 from app.src.model.produtcs import Products
 from flask import request, redirect, url_for, jsonify, render_template
 from app import db
+from sqlalchemy import or_
 
 class ServicesProducts:
     @staticmethod
     def register_product():
-        
+        from sqlalchemy import or_
         
         Cod_fabricante = request.form['Cod_fabricante']
         Ean = request.form['Ean']
@@ -36,26 +37,48 @@ class ServicesProducts:
     
     @staticmethod
     def update_products(id):
-        data = request.get_json()
         
-        Cod_fabricante = data['Cod_fabricante']
-        Ean = data['Ean']
-        Description_product = data['Description_product']
-        cod_system = data['cod_system']
-        Description_code_system = data['Description_code_system']
+
+        Cod_fabricante = request.form['Cod_fabricante']
+        Ean = request.form['Ean']
+        Description_product = request.form['Description_product']
+        cod_system = request.form['cod_system']
+        Description_code_system = request.form['Description_code_system']
+            
+        Products.query.filter_by(id=id).update({
+                'Cod_fabricante': Cod_fabricante,
+                'Ean': Ean,
+                'Description_product': Description_product,
+                'cod_system': cod_system,
+                'Description_code_system': Description_code_system,
+        })
+        db.session.commit()
+        return redirect(url_for('list_products'))
+   
+    
+    def remove_product(id):
+        product_bd = Products.query.filter_by(id=id).first()
+        db.session.delete(product_bd)
+        db.session.commit()
+        return redirect(url_for('list_products'))
+    
+    def search_products():
+        dados = request.args.get('q', '').strip()
+        page = request.args.get('page', 1, type=int)
+        per_page = 13
         
-        product = Products.query.get(id)
+        if dados:
+            produtos = Products.query.filter(
+                or_(
+                    Products.Description_product.ilike(f"%{dados}%"),
+                    Products.Ean.ilike(f"%{dados}%"),
+                    Products.Cod_fabricante.ilike(f"%{dados}%"),
+                    Products.cod_system.ilike(f"%{dados}%"),
+                    Products.Description_code_system.ilike(f"%{dados}%")
+                )
+            ).paginate(page=page, per_page=per_page, error_out=False)
+            
+            return render_template('lista_produtos.html', produtos=produtos)
+ 
         
-        if not product:
-            return jsonify({'message': 'product don"t exist', 'data': {}}), 404
-        
-        try:
-            product.Cod_fabricante = Cod_fabricante
-            product.Ean = Ean
-            product.Description_product = Description_product
-            product.cod_system = cod_system
-            product.Description_code_system = Description_code_system
-            db.session.commit()
-            return jsonify({"Product Update": "Sucessuful"}), 201
-        except:
-            return jsonify({"Erro": "Product not found"}), 500
+        return redirect(url_for('list_products'))

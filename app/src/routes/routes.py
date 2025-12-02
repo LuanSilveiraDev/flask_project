@@ -3,19 +3,12 @@ from flask import jsonify, request, render_template
 from app.src.services.auth.register import ServicesRegister
 from app.src.services.auth.login import ServicesLogin
 from app.src.model.users import Users
-from app.src.services.register_products import ServicesProducts
+from app.src.services.register_products import ServicesProducts, Products
 
 @app.route('/', methods=['GET'])
 @ServicesLogin.token_required 
 def home(current_user):
-        users = Users.query.filter_by(username=current_user.username).first()
-        if users.has_permission('USER'):
-            return render_template('navbar/navbar.html', user=current_user.username, users_USER=users.has_permission('USER'))
-        elif users.has_permission('ADMIN'):
-            return render_template('navbar/navbar.html', user=current_user.username, users_ADMIN=users.has_permission('ADMIN'))
-        else :
-            return render_template('navbar/navbar.html', user=current_user.username)
-        
+    return render_template('perfil.html', usuario=current_user)
       
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -23,6 +16,8 @@ def login():
     if request.method == 'POST':
         return ServicesLogin.login() 
     return render_template('login.html')
+
+
 
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -46,6 +41,19 @@ def list_products():
         return ServicesProducts.list_products()
     return render_template('lista_produtos.html')
 
-@app.route('/product_register/<id>', methods=['PUT'])
-def post_product(id):
-    return ServicesProducts.update_products(id)
+@app.route('/<int:id>/update_product', methods=['GET','POST'])
+def update_product(id):
+    if request.method == 'POST':
+        return ServicesProducts.update_products(id)
+    
+    product_bd = Products.query.get(id)
+    return render_template('update_product.html', produtos=product_bd)
+
+@app.route('/<int:id>/delete_product')
+def delete_product(id):
+    return ServicesProducts.remove_product(id)
+
+@app.route('/search_products', methods=['GET'])
+def search_products():
+    return ServicesProducts.search_products()
+    
