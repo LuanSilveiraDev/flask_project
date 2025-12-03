@@ -1,3 +1,12 @@
+from dotenv import load_dotenv
+import os
+
+# Caminho absoluto até o .env que está na raiz do projeto
+dotenv_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), ".env")
+load_dotenv(dotenv_path)
+
+
+
 from flask import Flask
 from app.data.config import Config
 from flask_sqlalchemy import SQLAlchemy
@@ -19,5 +28,5 @@ with app.app_context():
     print("Sucesso")
 
 if __name__ == '__main__':
-    app.run(debug=True ,host='0.0.0.0', port=5000 )
+    app.run(debug=True)
     
